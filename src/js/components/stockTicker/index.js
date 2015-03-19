@@ -43,6 +43,7 @@ angular.module('d3examples').directive('stockTicker', ['$interval', function($in
         };
         
         scope.data.push(newVal);
+
       }, 1000);
       
       svg.append("g")
@@ -61,8 +62,15 @@ angular.module('d3examples').directive('stockTicker', ['$interval', function($in
           .text("Price ($)");
     
       svg.append("path")
-          .datum(scope.data)
-          .attr("class", "line")
+        .datum(scope.data)
+        .attr("class", "line")
+        .attr("d", line);
+  
+      svg.selectAll(".line")
+        .data(scope.data)
+        .enter()
+          .append("path")
+          .attr("class","line")
           .attr("d", line);
     }
   }
