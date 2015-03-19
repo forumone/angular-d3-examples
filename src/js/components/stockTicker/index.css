@@ -1,16 +1,16 @@
+stock-ticker svg {
+  font: 10px sans-serif;
+}
+
+stock-ticker .line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
 stock-ticker .axis path,
 stock-ticker .axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
-}
-
-stock-ticker .x.axis path {
-  display: none;
-}
-
-stock-ticker .line {
-  fill: none;
-  stroke: steelblue;
-  stroke-width: 1.5px;
 }
