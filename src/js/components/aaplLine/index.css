@@ -1,0 +1,16 @@
+aapl-line .axis path,
+aapl-line .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+aapl-line .x.axis path {
+  display: none;
+}
+
+aapl-line .line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}

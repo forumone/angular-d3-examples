@@ -1,0 +1,22 @@
+{
+  "name": "d3_examples",
+  "version": "0.0.0",
+  "authors": [
+    "William Hurley <whurley@forumone.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.3",
+    "d3": "~3.5.5",
+    "jquery": "1.10",
+    "angular-route": "~1.3.15"
+  }
+}
