@@ -14,7 +14,8 @@ angular.module('d3examples').directive('stockTicker', ['$interval', function($in
           .range([0, width]);
     
       var y = d3.scale.linear()
-          .range([height, 0]);
+        .domain([0, 100])
+        .range([height, 0]);
     
       var xAxis = d3.svg.axis()
           .scale(x)
@@ -66,12 +67,19 @@ angular.module('d3examples').directive('stockTicker', ['$interval', function($in
         .attr("class", "line")
         .attr("d", line);
   
-      svg.selectAll(".line")
+      scope.$watchCollection('data', function() {
+        y.domain(d3.extent(scope.data, function(d) {
+          return d.date;
+        }));
+        
+        svg.selectAll(".line")
         .data(scope.data)
         .enter()
           .append("path")
           .attr("class","line")
           .attr("d", line);
+        
+      });
     }
   }
 }]);
