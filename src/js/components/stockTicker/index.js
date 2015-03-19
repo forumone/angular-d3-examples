@@ -4,72 +4,87 @@ angular.module('d3examples').directive('stockTicker', ['$interval', function($in
     restrict : 'E',
     scope : {},
     link : function(scope, element, attrs) {
-      var n = 40,
-      random = d3.random.normal(0, 45);
+      var margin = {
+          top: 20,
+          right: 20,
+          bottom: 30,
+          left: 50
+      };
       
-      scope.data = d3.range(n).map(function() {
-        return Math.floor(Math.random() * 100);
-      });
+      scope.data = [];
 
-      var margin = {top: 20, right: 20, bottom: 20, left: 40},
-          width = 960 - margin.left - margin.right,
+      var width = 960 - margin.left - margin.right,
           height = 500 - margin.top - margin.bottom;
-    
-      var x = d3.scale.linear()
-          .domain([0, n - 1])
+
+      var parseDate = d3.time.format("%d-%b-%y").parse;
+
+      var x = d3.time.scale()
+          .domain([new Date(), new Date()])
           .range([0, width]);
-    
+
       var y = d3.scale.linear()
           .domain([0, 100])
           .range([height, 0]);
-    
-      var line = d3.svg.line()
-          .x(function(d, i) { return x(i); })
-          .y(function(d, i) { return y(d); });
-    
-      var svg = d3.select(element[0]).append("svg")
+
+      scope.xAxis = d3.svg.axis()
+          .scale(x)
+          .orient("bottom");
+
+      scope.yAxis = d3.svg.axis()
+          .scale(y)
+          .orient("left");
+
+      scope.line = d3.svg.line()
+          .x(function (d) { return x(d.date); })
+          .y(function (d) { return y(d.close); });
+
+      scope.svg = d3.select(element[0])
+          .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
-        .append("g")
+          .append("g")
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    
-      svg.append("defs").append("clipPath")
-          .attr("id", "clip")
-        .append("rect")
-          .attr("width", width)
-          .attr("height", height);
-    
-      svg.append("g")
+
+      scope.xSel = scope.svg.append("g")
           .attr("class", "x axis")
-          .attr("transform", "translate(0," + y(0) + ")")
-          .call(d3.svg.axis().scale(x).orient("bottom"));
-    
-      svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(scope.xAxis);
+
+      scope.ySel = scope.svg.append("g")
           .attr("class", "y axis")
-          .call(d3.svg.axis().scale(y).orient("left"));
-    
-      var path = svg.append("g")
-          .attr("clip-path", "url(#clip)")
-        .append("path")
+          .call(scope.yAxis)
+          .append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Price ($)");
+
+      scope.path = scope.svg.append("path")
           .datum(scope.data)
           .attr("class", "line")
-          .attr("d", line);
+          .attr("d", scope.line);
       
-      $interval(function() {
-        scope.data.push(Math.floor(Math.random() * 100));
-        scope.data.shift();
+      var interval = $interval(function() {
+        scope.data.push({
+          date: new Date(),
+          close: Math.random() * 100
+        });
       }, 500);
       
       scope.$watchCollection('data', function() {
-        // redraw the line, and slide it to the left
-        path
-            .attr("d", line)
-            .attr("transform", null)
+        x.domain(d3.extent(scope.data, function (d) { return +d.date; }));
+        
+        scope.path.datum(scope.data)
           .transition()
-            .ease("linear")
-            .attr("transform", "translate(" + x(-1) + ",0)");
-
-      });
+          .attr('d', scope.line);
+  
+        scope.xSel.transition().call(scope.xAxis);
+        
+        if (100 < scope.data.length) {
+          $interval.cancel(interval);
+        }
+      }); 
     }
   }
 }]);

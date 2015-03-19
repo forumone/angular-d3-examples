@@ -1,0 +1,16 @@
+stock-ticker-sliding svg {
+  font: 10px sans-serif;
+}
+
+stock-ticker-sliding .line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+stock-ticker-sliding .axis path,
+stock-ticker-sliding .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
