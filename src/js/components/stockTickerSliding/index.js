@@ -30,7 +30,8 @@ angular.module('d3examples').directive('stockTickerSliding', ['$interval', funct
     
       var line = d3.svg.line()
         .x(function(d, i) { return x(i); })
-        .y(function(d, i) { return y(d); });
+        .y(function(d, i) { return y(d); })
+        .interpolate('monotone');
     
       var svg = d3.select(element[0]).append("svg")
         .attr("width", width + margin.left + margin.right)
